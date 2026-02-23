@@ -4,7 +4,7 @@ import '../../../data/models/alert_model.dart';
 
 class AlertsController extends GetxController {
   final alerts = <AlertModel>[].obs;
-  
+
   // Pagination
   final int pageSize = 10;
   final currentPage = 1.obs;
@@ -27,7 +27,9 @@ class AlertsController extends GetxController {
         severity: ['critical', 'high', 'medium', 'low'][i % 4],
         createDate: '2026-02-23',
         createTime: '10:${(i * 2).toString().padLeft(2, '0')}:00',
-        alertDescription: i % 3 == 0 ? 'Person detected in restricted area.' : null,
+        alertDescription: i % 3 == 0
+            ? 'Person detected in restricted area.'
+            : null,
         camera: Camera(
           name: 'Camera ${i % 5 + 1}',
           location: Location(name: 'Zone ${(i % 3) + 1} North'),
@@ -44,7 +46,7 @@ class AlertsController extends GetxController {
   List<AlertModel> get sortedAlerts {
     List<AlertModel> data = List<AlertModel>.from(alerts);
     if (sortKey.value == null || sortOrder.value == null) return data;
-    
+
     data.sort((AlertModel a, AlertModel b) {
       int comparison = 0;
       switch (sortKey.value) {
@@ -55,7 +57,9 @@ class AlertsController extends GetxController {
           comparison = a.severity.compareTo(b.severity);
           break;
         case 'timestamp':
-          comparison = '${a.createDate} ${a.createTime}'.compareTo('${b.createDate} ${b.createTime}');
+          comparison = '${a.createDate} ${a.createTime}'.compareTo(
+            '${b.createDate} ${b.createTime}',
+          );
           break;
         case 'camera':
           comparison = a.camera.name.compareTo(b.camera.name);
@@ -85,7 +89,9 @@ class AlertsController extends GetxController {
   }
 
   int get totalPages {
-    return (alerts.length / pageSize).ceil() == 0 ? 1 : (alerts.length / pageSize).ceil();
+    return (alerts.length / pageSize).ceil() == 0
+        ? 1
+        : (alerts.length / pageSize).ceil();
   }
 
   void handleSort(String key) {
@@ -110,12 +116,14 @@ class AlertsController extends GetxController {
     if (index != -1) {
       alerts[index].status = status;
       alerts.refresh();
-      
+
       Get.snackbar(
         'Success',
         'Alert has been $status successfully.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: const Color(0xFF22C55E).withOpacity(0.9), // success color
+        backgroundColor: const Color(
+          0xFF22C55E,
+        ).withOpacity(0.9), // success color
         colorText: const Color(0xFFFFFFFF),
         duration: const Duration(seconds: 3),
       );

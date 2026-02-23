@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
@@ -6,222 +7,272 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFF0F7FF),
-              Color(0xFFF6FAFF),
-              Color(0xFFEEF2FF),
-            ],
+      backgroundColor: const Color(0xFFF1F5F9), // slate-100 background
+      appBar: AppBar(
+        title: const Text(
+          'Dashboard Analytics',
+          style: TextStyle(
+            color: Color(0xFF0F172A),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildTopNav(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'AI-Powered CCTV',
-                        style: TextStyle(
-                          fontSize: 12,
-                          letterSpacing: 2.0,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2563EB), // text-blue-600
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        'Automate Object\nDetection System',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          height: 1.2,
-                          color: Color(0xFF0F172A), // text-slate-900
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Real-time alerts, camera management, and clean analytics — all in one sleek dashboard.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF475569), // text-slate-600
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      Container(
-                        height: 1,
-                        width: 100,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.transparent,
-                              Color(0xFFCBD5E1), // slate-300
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      _buildFeatures(),
-                      const SizedBox(height: 40),
-                      _buildFooter(),
-                    ],
-                  ),
-                ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        automaticallyImplyLeading: false,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Alerts Over Time (24h)',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF334155),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            _buildLineChartCard(),
+            const SizedBox(height: 24),
+            const Text(
+              'Events by Severity',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF334155),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildStackedBarChartCard(),
+            const SizedBox(height: 80), // Padding for Bottom Navigation Bar
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildTopNav() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Image.asset(
-                'assets/images/automate-object-detection-system-icon.png', // Fallback to an icon if asset doesn't exist
-                width: 28,
-                height: 28,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0B63FF),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
-                  );
-                },
-              ),
-              const SizedBox(width: 12),
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.5,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: 'Automate ',
-                      style: TextStyle(color: Color(0xFF1E3A8A)), // secondary color
-                    ),
-                    TextSpan(
-                      text: 'Object Detection System',
-                      style: TextStyle(color: Color(0xFF0B63FF)), // primary color
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Note: Assuming we are already logged in or this is a 'Sign Out' or profile button in real app
-              // since this is the home view. The original Next.js had "Sign in". 
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0B63FF),
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-              minimumSize: const Size(0, 36),
-            ),
-            child: const Text('Profile', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+  Widget _buildLineChartCard() {
+    return Container(
+      height: 300,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: false,
+            horizontalInterval: 10,
+            getDrawingHorizontalLine: (value) =>
+                FlLine(color: const Color(0xFFE2E8F0), strokeWidth: 1),
+          ),
+          titlesData: FlTitlesData(
+            show: true,
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 30,
+                interval: 4,
+                getTitlesWidget: (value, meta) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      '${value.toInt()}:00',
+                      style: const TextStyle(
+                        color: Color(0xFF64748B),
+                        fontSize: 12,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                interval: 10,
+                reservedSize: 42,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    value.toInt().toString(),
+                    style: const TextStyle(
+                      color: Color(0xFF64748B),
+                      fontSize: 12,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          borderData: FlBorderData(show: false),
+          minX: 0,
+          maxX: 24,
+          minY: 0,
+          maxY: 50,
+          lineBarsData: [
+            LineChartBarData(
+              spots: const [
+                FlSpot(0, 10),
+                FlSpot(4, 15),
+                FlSpot(8, 45),
+                FlSpot(12, 30),
+                FlSpot(16, 25),
+                FlSpot(20, 18),
+                FlSpot(24, 12),
+              ],
+              isCurved: true,
+              color: const Color(0xFF3B82F6), // blue-500
+              barWidth: 3,
+              isStrokeCapRound: true,
+              dotData: const FlDotData(show: true),
+              belowBarData: BarAreaData(
+                show: true,
+                color: const Color(0xFF3B82F6).withOpacity(0.1),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildFeatures() {
-    return Column(
-      children: [
-        _buildFeatureCard(
-          title: 'Real-time Alerts',
-          desc: 'Instant notifications with clear severity to keep you ahead of incidents.',
-          icon: Icons.notifications_active_outlined,
-        ),
-        const SizedBox(height: 16),
-        _buildFeatureCard(
-          title: 'Camera Management',
-          desc: 'Organize cameras, statuses, and health in a streamlined interface.',
-          icon: Icons.video_camera_back_outlined,
-        ),
-        const SizedBox(height: 16),
-        _buildFeatureCard(
-          title: 'Analytics & Trends',
-          desc: 'Clean charts for daily activity and severity breakdowns.',
-          icon: Icons.analytics_outlined,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFeatureCard({required String title, required String desc, required IconData icon}) {
+  Widget _buildStackedBarChartCard() {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      height: 300,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0).withOpacity(0.7)), // slate-200
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFFDBEAFE), width: 2), // blue-100
-            ),
-            child: Icon(icon, color: const Color(0xFF0B63FF), size: 20),
+          // Legend
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildLegend(
+                color: const Color(0xFFEF4444),
+                text: 'High',
+              ), // red-500
+              const SizedBox(width: 16),
+              _buildLegend(
+                color: const Color(0xFFF59E0B),
+                text: 'Medium',
+              ), // amber-500
+              const SizedBox(width: 16),
+              _buildLegend(
+                color: const Color(0xFF10B981),
+                text: 'Low',
+              ), // emerald-500
+            ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF0F172A),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            desc,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF475569),
+          const SizedBox(height: 16),
+          Expanded(
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: 60,
+                barTouchData: BarTouchData(enabled: false),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      getTitlesWidget: (value, meta) {
+                        String text;
+                        switch (value.toInt()) {
+                          case 0:
+                            text = 'Motion';
+                            break;
+                          case 1:
+                            text = 'Person';
+                            break;
+                          case 2:
+                            text = 'Vehicle';
+                            break;
+                          case 3:
+                            text = 'Line Cross';
+                            break;
+                          default:
+                            text = '';
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            text,
+                            style: const TextStyle(
+                              color: Color(0xFF64748B),
+                              fontSize: 12,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 42,
+                      interval: 15,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          value.toInt().toString(),
+                          style: const TextStyle(
+                            color: Color(0xFF64748B),
+                            fontSize: 12,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  getDrawingHorizontalLine: (value) =>
+                      FlLine(color: const Color(0xFFE2E8F0), strokeWidth: 1),
+                ),
+                borderData: FlBorderData(show: false),
+                barGroups: [
+                  _makeStackedBar(0, 5, 20, 15), // Motion
+                  _makeStackedBar(1, 10, 15, 25), // Person
+                  _makeStackedBar(2, 2, 8, 30), // Vehicle
+                  _makeStackedBar(3, 12, 10, 5), // Line Cross
+                ],
+              ),
             ),
           ),
         ],
@@ -229,23 +280,50 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter() {
-    return const Column(
+  Widget _buildLegend({required Color color, required String text}) {
+    return Row(
       children: [
-        Text(
-          '© 2026 Automate Object Detection System',
-          style: TextStyle(
-            fontSize: 12,
-            color: Color(0xCC64748B), // slate-500/80
-          ),
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        SizedBox(height: 4),
+        const SizedBox(width: 4),
         Text(
-          'SynTech-T5 x TTT Brother',
-          style: TextStyle(
-            fontSize: 11,
-            color: Color(0xCC64748B),
-          ),
+          text,
+          style: const TextStyle(fontSize: 12, color: Color(0xFF475569)),
+        ),
+      ],
+    );
+  }
+
+  BarChartGroupData _makeStackedBar(
+    int x,
+    double high,
+    double medium,
+    double low,
+  ) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: high + medium + low,
+          width: 24,
+          borderRadius: BorderRadius.circular(4),
+          color: Colors.transparent, // Background rod
+          rodStackItems: [
+            BarChartRodStackItem(0, low, const Color(0xFF10B981)), // Low - Base
+            BarChartRodStackItem(
+              low,
+              low + medium,
+              const Color(0xFFF59E0B),
+            ), // Medium
+            BarChartRodStackItem(
+              low + medium,
+              low + medium + high,
+              const Color(0xFFEF4444),
+            ), // High - Top
+          ],
         ),
       ],
     );

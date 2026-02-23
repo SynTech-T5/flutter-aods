@@ -49,7 +49,10 @@ class LoginView extends GetView<LoginController> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 32,
+                ),
                 child: _buildCard(),
               ),
             ),
@@ -124,7 +127,11 @@ class LoginView extends GetView<LoginController> {
             ),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(Icons.videocam_rounded, color: Colors.white, size: 22),
+          child: const Icon(
+            Icons.videocam_rounded,
+            color: Colors.white,
+            size: 22,
+          ),
         ),
         const SizedBox(width: 12),
         const Column(
@@ -207,10 +214,7 @@ class LoginView extends GetView<LoginController> {
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               msg,
-              style: const TextStyle(
-                fontSize: 13,
-                color: Color(0xFFDC2626),
-              ),
+              style: const TextStyle(fontSize: 13, color: Color(0xFFDC2626)),
             ),
           );
         }),
@@ -295,7 +299,9 @@ class LoginView extends GetView<LoginController> {
           onPressed: loading ? null : controller.login,
           style: ElevatedButton.styleFrom(
             backgroundColor: _primary,
-            disabledBackgroundColor: const Color(0x8C0B63FF), // _primary ~55% opacity
+            disabledBackgroundColor: const Color(
+              0x8C0B63FF,
+            ), // _primary ~55% opacity
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -385,8 +391,10 @@ class _AppTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: const Color(0xEBFFFFFF), // white ~92% opacity
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 12,
+        ),
         isDense: true,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -394,10 +402,7 @@ class _AppTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            color: Color(0xFF0B63FF),
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF0B63FF), width: 1.5),
         ),
         suffixIcon: suffixIcon != null
             ? Padding(
@@ -443,10 +448,7 @@ class _GlowBlob extends StatelessWidget {
         child: Container(
           width: size,
           height: size,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
             child: const SizedBox.expand(),
