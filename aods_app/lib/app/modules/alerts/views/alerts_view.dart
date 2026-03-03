@@ -135,6 +135,14 @@ class AlertsView extends StatelessWidget {
         return Icons.person_outline;
       case 'car':
         return Icons.directions_car_outlined;
+      case 'camera-off':
+        return Icons.videocam_off_outlined;
+      case 'wifi-off':
+        return Icons.wifi_off_outlined;
+      case 'motion':
+        return Icons.directions_run;
+      case 'line-cross':
+        return Icons.border_horizontal;
       default:
         return Icons.notifications_active_outlined;
     }
@@ -182,7 +190,7 @@ class AlertsView extends StatelessWidget {
                         Row(
                           children: [
                             Icon(
-                              _getEventIcon(alert.event.icon),
+                              _getEventIcon(alert.eventIcon),
                               size: 20,
                               color: const Color(0xFF0B63FF),
                             ),
@@ -191,7 +199,7 @@ class AlertsView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  alert.event.name,
+                                  alert.eventName,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
@@ -243,7 +251,7 @@ class AlertsView extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${alert.createDate} ${alert.createTime}',
+                          '${alert.formattedDate} ${alert.formattedTime}',
                           style: const TextStyle(fontSize: 12),
                         ),
                         const SizedBox(width: 12),
@@ -254,11 +262,28 @@ class AlertsView extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          alert.camera.name,
+                          alert.cameraName,
                           style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
+                    if (alert.locationName.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 14,
+                            color: Color(0xFF0B63FF),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            alert.locationName,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -303,7 +328,7 @@ class AlertsView extends StatelessWidget {
                 return;
               }
               controller.updateAlertStatus(
-                alert.id,
+                alert.alertId,
                 action,
                 reasonController.text.trim(),
               );
@@ -312,7 +337,7 @@ class AlertsView extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: isResolve
                   ? const Color(0xFF0EA5E9)
-                  : const Color(0xFFE11D48), // info or danger
+                  : const Color(0xFFE11D48),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -388,12 +413,76 @@ class AlertsView extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Color(0xFF3B82F6)),
+            onPressed: () => controller.fetchAlerts(),
+            tooltip: 'Refresh',
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(color: Colors.grey.shade200, height: 1),
         ),
       ),
       body: Obx(() {
+        // Loading state
+        if (controller.isLoading.value) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(color: Color(0xFF3B82F6)),
+                SizedBox(height: 16),
+                Text(
+                  'Loading alerts...',
+                  style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Error state
+        if (controller.errorMessage.value.isNotEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: Color(0xFFEF4444),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    controller.errorMessage.value,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF64748B),
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () => controller.fetchAlerts(),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF3B82F6),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Empty state
         if (controller.alerts.isEmpty) {
           return const Center(child: Text('No alerts to display.'));
         }
@@ -445,10 +534,11 @@ class AlertsView extends StatelessWidget {
                                   _buildSeverityBadge(alert.severity),
                                 ],
                               ),
-                              _buildStatusBadge(alert.status),
+                              _buildStatusBadge(alert.alertStatus),
                             ],
                           ),
                           const SizedBox(height: 12),
+                          // Timestamp
                           Row(
                             children: [
                               const Icon(
@@ -458,7 +548,7 @@ class AlertsView extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                '${alert.createDate} ${alert.createTime}',
+                                '${alert.formattedDate} ${alert.formattedTime}',
                                 style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.black87,
@@ -467,6 +557,7 @@ class AlertsView extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 8),
+                          // Camera + Event
                           Row(
                             children: [
                               const Icon(
@@ -477,7 +568,7 @@ class AlertsView extends StatelessWidget {
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
-                                  alert.camera.name,
+                                  alert.cameraName,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     color: Colors.black87,
@@ -487,13 +578,13 @@ class AlertsView extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Icon(
-                                _getEventIcon(alert.event.icon),
+                                _getEventIcon(alert.eventIcon),
                                 size: 14,
                                 color: Colors.grey,
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                alert.event.name,
+                                alert.eventName,
                                 style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.black87,
@@ -501,7 +592,42 @@ class AlertsView extends StatelessWidget {
                               ),
                             ],
                           ),
-                          if (alert.status.toLowerCase() == 'active') ...[
+                          // Location
+                          if (alert.locationName.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on_outlined,
+                                  size: 14,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  alert.locationName,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          // Description
+                          if (alert.alertDescription != null &&
+                              alert.alertDescription!.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              alert.alertDescription!,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF64748B),
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
+                          // Action buttons for active alerts
+                          if (alert.alertStatus.toLowerCase() == 'active') ...[
                             const SizedBox(height: 12),
                             const Divider(height: 1),
                             const SizedBox(height: 8),
@@ -580,8 +706,7 @@ class AlertsView extends StatelessWidget {
 
   Widget _buildPaginationBar() {
     return Container(
-      // Add extra 80px bottom padding to prevent overlap with docked BottomAppBar
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12 + 80),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(top: BorderSide(color: Colors.grey.shade200)),

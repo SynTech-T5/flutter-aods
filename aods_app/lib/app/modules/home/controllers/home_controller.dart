@@ -4,7 +4,8 @@ class HomeController extends GetxController {
   final count = 0.obs;
 
   // Track the current index of the bottom navigation bar
-  final currentIndex = 0.obs;
+  // Default to 1 (Home = center tab)
+  final currentIndex = 1.obs;
 
   @override
   void onInit() {
@@ -23,10 +24,9 @@ class HomeController extends GetxController {
 
   void increment() => count.value++;
 
-  // Function to change the active page
+  // Function to change the active page (3 pages: Alert, Home, Dashboard)
   void changePage(int index) {
-    if (index >= 0 && index < 4) {
-      // Update to 4 pages
+    if (index >= 0 && index < 3) {
       currentIndex.value = index;
     }
   }

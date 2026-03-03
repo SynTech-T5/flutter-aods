@@ -18,6 +18,9 @@ class LoginController extends GetxController {
   // ─── Server URL ─────────────────────────────────────────────────────────────
   static const String _baseUrl = 'http://dekdee2.informatics.buu.ac.th:8066';
 
+  // ─── Global auth token storage ──────────────────────────────────────────────
+  static String? authToken;
+
   // ─── Dio instance ────────────────────────────────────────────────────────────
   late final Dio _dio;
 
@@ -68,6 +71,11 @@ class LoginController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        // Extract and store the auth token
+        final data = response.data;
+        if (data is Map<String, dynamic> && data['token'] != null) {
+          authToken = data['token'].toString();
+        }
         // Login สำเร็จ → ไปหน้า home
         Get.offAllNamed(Routes.HOME);
       } else {
