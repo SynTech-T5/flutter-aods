@@ -50,22 +50,25 @@ class DashboardView extends StatelessWidget {
         title: const Text(
           'Dashboard Analytics',
           style: TextStyle(
-            color: Color(0xFF000000),
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
           ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: false,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: colorPrimary),
+            icon: const Icon(Icons.refresh, color: Color(0xFF3B82F6)),
             onPressed: () => alertsCtrl.fetchAlerts(),
             tooltip: 'Refresh Data',
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: Colors.grey.shade200, height: 1),
+        ),
       ),
       body: Obx(() {
         if (alertsCtrl.isLoading.value) {

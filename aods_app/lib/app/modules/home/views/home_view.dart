@@ -135,18 +135,17 @@ class _HomeContentView extends StatelessWidget {
         title: const Text(
           'Create Alert',
           style: TextStyle(
-            color: Color(0xFF023D8B),
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+            color: Color(0xFF0F172A),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
           ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: false,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout, color: Color(0xFFFF2D2D)),
+            icon: const Icon(Icons.logout, color: Color(0xFF3B82F6)),
             tooltip: 'Logout',
             onPressed: () {
               Get.dialog(
@@ -180,6 +179,10 @@ class _HomeContentView extends StatelessWidget {
             },
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: Colors.grey.shade200, height: 1),
+        ),
       ),
       body: Obx(() {
         if (controller.isLoadingCameras.value || controller.isLoadingEvents.value) {
