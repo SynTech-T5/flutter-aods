@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
 import '../../alerts/views/alerts_view.dart';
+import '../../login/controllers/login_controller.dart';
 import 'dashboard_view.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -76,8 +77,8 @@ class HomeView extends GetView<HomeController> {
     required VoidCallback onTap,
   }) {
     final color = isSelected
-        ? const Color(0xFF3B82F6) // blue-500
-        : const Color(0xFF94A3B8); // slate-400
+        ? const Color(0xFF0077FF)
+        : const Color(0xFFBFBFBF);
 
     return Expanded(
       child: GestureDetector(
@@ -92,7 +93,7 @@ class HomeView extends GetView<HomeController> {
                 height: 3,
                 width: 28,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3B82F6),
+                  color: const Color(0xFF0077FF),
                   borderRadius: BorderRadius.circular(2),
                 ),
                 margin: const EdgeInsets.only(bottom: 4),
@@ -127,12 +128,12 @@ class _HomeContentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFECF8FF),
       appBar: AppBar(
         title: const Text(
           'Home',
           style: TextStyle(
-            color: Color(0xFF0F172A),
+            color: Color(0xFF023D8B),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -141,6 +142,45 @@ class _HomeContentView extends StatelessWidget {
         elevation: 0,
         centerTitle: false,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Color(0xFFFF2D2D)),
+            tooltip: 'Logout',
+            onPressed: () {
+              Get.dialog(
+                AlertDialog(
+                  backgroundColor: Colors.white,
+                  title: const Text(
+                    'Logout',
+                    style: TextStyle(color: Color(0xFF023D8B)),
+                  ),
+                  content: const Text('Are you sure you want to logout?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Get.back(),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Color(0xFFBFBFBF)),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        final loginCtrl = Get.put(LoginController());
+                        loginCtrl.logout();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF2D2D),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Logout'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -149,7 +189,7 @@ class _HomeContentView extends StatelessWidget {
             Icon(
               Icons.security,
               size: 64,
-              color: const Color(0xFF3B82F6).withOpacity(0.5),
+              color: const Color(0xFF0077FF).withOpacity(0.5),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -157,7 +197,7 @@ class _HomeContentView extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF0F172A),
+                color: Color(0xFF023D8B),
               ),
             ),
             const SizedBox(height: 8),
@@ -165,7 +205,7 @@ class _HomeContentView extends StatelessWidget {
               'Automated Object Detection System',
               style: TextStyle(
                 fontSize: 14,
-                color: Color(0xFF64748B),
+                color: Color(0xFFAAAAAA),
               ),
             ),
           ],

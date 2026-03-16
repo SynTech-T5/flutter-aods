@@ -36,7 +36,7 @@ class LandingView extends GetView<LandingController> {
                           fontSize: 12,
                           letterSpacing: 2.0,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF2563EB), // text-blue-600
+                          color: Color(0xFF0077FF),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -47,7 +47,7 @@ class LandingView extends GetView<LandingController> {
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           height: 1.2,
-                          color: Color(0xFF0F172A), // text-slate-900
+                          color: Color(0xFF023D8B),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -56,7 +56,7 @@ class LandingView extends GetView<LandingController> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF475569), // text-slate-600
+                          color: Color(0xFFAAAAAA),
                         ),
                       ),
                       const SizedBox(height: 40),
@@ -105,7 +105,7 @@ class LandingView extends GetView<LandingController> {
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0B63FF),
+                      color: const Color(0xFF0077FF),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Icon(
@@ -128,14 +128,14 @@ class LandingView extends GetView<LandingController> {
                     TextSpan(
                       text: 'Automate ',
                       style: TextStyle(
-                        color: Color(0xFF1E3A8A),
-                      ), // secondary color
+                        color: Color(0xFF023D8B),
+                      ),
                     ),
                     TextSpan(
                       text: 'Object Detection System',
                       style: TextStyle(
-                        color: Color(0xFF0B63FF),
-                      ), // primary color
+                        color: Color(0xFF0077FF),
+                      ),
                     ),
                   ],
                 ),
@@ -147,7 +147,7 @@ class LandingView extends GetView<LandingController> {
               Get.toNamed(Routes.LOGIN);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0B63FF),
+              backgroundColor: const Color(0xFF0077FF),
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -228,7 +228,7 @@ class LandingView extends GetView<LandingController> {
                 width: 2,
               ), // blue-100
             ),
-            child: Icon(icon, color: const Color(0xFF0B63FF), size: 20),
+            child: Icon(icon, color: const Color(0xFF0077FF), size: 20),
           ),
           const SizedBox(height: 12),
           Text(
@@ -242,7 +242,7 @@ class LandingView extends GetView<LandingController> {
           const SizedBox(height: 4),
           Text(
             desc,
-            style: const TextStyle(fontSize: 14, color: Color(0xFF475569)),
+            style: const TextStyle(fontSize: 14, color: Color(0xFFAAAAAA)),
           ),
         ],
       ),

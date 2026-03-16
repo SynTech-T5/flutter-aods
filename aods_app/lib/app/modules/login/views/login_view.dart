@@ -8,8 +8,8 @@ class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
 
   // ─── Brand colors ────────────────────────────────────────────────────────────
-  static const Color _primary = Color(0xFF0B63FF);
-  static const Color _secondary = Color(0xFF1E3A8A);
+  static const Color _primary = Color(0xFF0077FF);
+  static const Color _secondary = Color(0xFF023D8B);
 
   @override
   Widget build(BuildContext context) {
@@ -115,22 +115,32 @@ class LoginView extends GetView<LoginController> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Icon badge
-        Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [_primary, _secondary],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Icon(
-            Icons.videocam_rounded,
-            color: Colors.white,
-            size: 22,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            'assets/images/automate-object-detection-system-icon.png',
+            width: 42,
+            height: 42,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [_primary, _secondary],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.videocam_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              );
+            },
           ),
         ),
         const SizedBox(width: 12),
@@ -402,7 +412,7 @@ class _AppTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFF0B63FF), width: 1.5),
+          borderSide: const BorderSide(color: Color(0xFF0077FF), width: 1.5),
         ),
         suffixIcon: suffixIcon != null
             ? Padding(

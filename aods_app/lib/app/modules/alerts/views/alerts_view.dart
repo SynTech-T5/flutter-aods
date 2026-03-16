@@ -159,156 +159,189 @@ class AlertsView extends StatelessWidget {
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         title: Text(
           isResolve ? 'Resolve Alert' : 'Dismiss Alert',
-          style: const TextStyle(color: Color(0xFF0B63FF), fontSize: 20),
+          style: const TextStyle(color: Color(0xFF0077FF), fontSize: 20),
         ),
-        content: SizedBox(
-          width: 400,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Review alert details and provide a reason before continuing.',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
-                  borderRadius: BorderRadius.circular(8),
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Review alert details and provide a reason before continuing.',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              _getEventIcon(alert.eventIcon),
-                              size: 20,
-                              color: const Color(0xFF0B63FF),
-                            ),
-                            const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  alert.eventName,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const Text(
-                                  'Event',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                alert.formattedId,
-                                style: const TextStyle(
-                                  fontFamily: 'monospace',
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            _buildSeverityBadge(alert.severity),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: Color(0xFF0B63FF),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${alert.formattedDate} ${alert.formattedTime}',
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        const SizedBox(width: 12),
-                        const Icon(
-                          Icons.camera_alt_outlined,
-                          size: 14,
-                          color: Color(0xFF0B63FF),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          alert.cameraName,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    if (alert.locationName.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Row(
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Event info row - wraps on small screens
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.location_on_outlined,
-                            size: 14,
-                            color: Color(0xFF0B63FF),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _getEventIcon(alert.eventIcon),
+                                size: 20,
+                                color: const Color(0xFF0077FF),
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      alert.eventName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const Text(
+                                      'Event',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            alert.locationName,
-                            style: const TextStyle(fontSize: 12),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  alert.formattedId,
+                                  style: const TextStyle(
+                                    fontFamily: 'monospace',
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              _buildSeverityBadge(alert.severity),
+                            ],
                           ),
                         ],
                       ),
+                      const SizedBox(height: 12),
+                      // Timestamp + camera - uses Wrap for small screens
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 6,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.access_time,
+                                size: 14,
+                                color: Color(0xFF0077FF),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${alert.formattedDate} ${alert.formattedTime}',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.camera_alt_outlined,
+                                size: 14,
+                                color: Color(0xFF0077FF),
+                              ),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  alert.cameraName,
+                                  style: const TextStyle(fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      if (alert.locationName.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on_outlined,
+                              size: 14,
+                              color: Color(0xFF0077FF),
+                            ),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                alert.locationName,
+                                style: const TextStyle(fontSize: 12),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Reason *',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: reasonController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: 'Enter reason...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFF0B63FF)),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                const Text(
+                  'Reason *',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: reasonController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: 'Enter reason...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xFF0077FF)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -322,7 +355,7 @@ class AlertsView extends StatelessWidget {
                 Get.snackbar(
                   'Error',
                   'Please provide a reason.',
-                  backgroundColor: Colors.red,
+                  backgroundColor: const Color(0xFFFF2D2D),
                   colorText: Colors.white,
                 );
                 return;
@@ -336,8 +369,8 @@ class AlertsView extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: isResolve
-                  ? const Color(0xFF0EA5E9)
-                  : const Color(0xFFE11D48),
+                  ? const Color(0xFF3BCF00)
+                  : const Color(0xFFFF2D2D),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -520,20 +553,24 @@ class AlertsView extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    alert.formattedId,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: Color(0xFF0B63FF),
+                              Flexible(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      alert.formattedId,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: Color(0xFF0077FF),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  _buildSeverityBadge(alert.severity),
-                                ],
+                                    const SizedBox(width: 8),
+                                    _buildSeverityBadge(alert.severity),
+                                  ],
+                                ),
                               ),
+                              const SizedBox(width: 4),
                               _buildStatusBadge(alert.alertStatus),
                             ],
                           ),
@@ -547,11 +584,14 @@ class AlertsView extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                               const SizedBox(width: 4),
-                              Text(
-                                '${alert.formattedDate} ${alert.formattedTime}',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black87,
+                              Flexible(
+                                child: Text(
+                                  '${alert.formattedDate} ${alert.formattedTime}',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -583,11 +623,14 @@ class AlertsView extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                               const SizedBox(width: 4),
-                              Text(
-                                alert.eventName,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black87,
+                              Flexible(
+                                child: Text(
+                                  alert.eventName,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],

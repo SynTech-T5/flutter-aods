@@ -117,6 +117,25 @@ class LoginController extends GetxController {
     }
   }
 
+  /// POST /api/auth/logout
+  Future<void> logout() async {
+    try {
+      if (authToken != null && authToken!.isNotEmpty) {
+        await _dio.post(
+          '/api/auth/logout',
+          options: Options(
+            headers: {'Authorization': 'Bearer $authToken'},
+          ),
+        );
+      }
+    } catch (_) {
+      // Proceed with local logout even if request fails
+    } finally {
+      authToken = null;
+      Get.offAllNamed(Routes.LANDING);
+    }
+  }
+
   @override
   void onClose() {
     usernameOrEmailCtrl.dispose();

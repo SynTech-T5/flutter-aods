@@ -256,6 +256,19 @@ class AlertsController extends GetxController {
     return counts;
   }
 
+  /// Count alerts by event name grouped by severity (for stacked bar chart)
+  /// Returns Map<eventName, Map<severity, count>>
+  Map<String, Map<String, int>> get eventCountsBySeverity {
+    final result = <String, Map<String, int>>{};
+    for (final alert in alerts) {
+      final event = alert.eventName;
+      final severity = alert.severity.toLowerCase();
+      result.putIfAbsent(event, () => <String, int>{});
+      result[event]![severity] = (result[event]![severity] ?? 0) + 1;
+    }
+    return result;
+  }
+
   /// Group alerts by hour for line chart (last 24h)
   Map<int, int> get alertsByHour {
     final counts = <int, int>{};
