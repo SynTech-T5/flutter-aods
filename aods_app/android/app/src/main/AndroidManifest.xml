@@ -2,7 +2,7 @@
     <!-- อนุญาตให้แอปเข้าถึง internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="aods_app"
+        android:label="AODS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
